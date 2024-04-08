@@ -1,0 +1,216 @@
+
+{% extends 'fillow/elements/layouts/admin.html' %}
+{% load static %}
+{% block additional_css %}
+{% endblock %}
+{% block content %}
+<!-- Styles -->
+<style>
+    #malaysia-map {
+      width: 100%;
+      height: 75vh;
+    }
+    </style>
+
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/malaysiaLow.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<!-- Chart code -->
+<script>
+am5.ready(function() {
+    console.log("am5.ready function started");
+
+
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("malaysia-map");
+
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([
+  am5themes_Animated.new(root)
+]);
+
+// Create the map chart
+// https://www.amcharts.com/docs/v5/charts/map-chart/
+
+
+var chart = root.container.children.push(
+  am5map.MapChart.new(root, {
+    panX: "rotateX",
+    panY: "translateY",
+    homeZoomLevel: 5,
+    homeGeoPoint: { longitude: 109.697, latitude: 4.2105 }, // Updated coordinates for Malaysia
+    //rotationX: -180,
+    // rotationY: 50,
+    projection: am5map.geoMercator(),
+  })
+);
+
+
+// Create main polygon series for countries
+// https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
+var polygonSeries = chart.series.push(
+  am5map.MapPolygonSeries.new(root, {
+    geoJSON: am5geodata_malaysiaLow
+  })
+);
+
+polygonSeries.mapPolygons.template.setAll({
+  fill:am5.color(0xdadada)
+});
+
+
+
+// Create point series for markers
+// https://www.amcharts.com/docs/v5/charts/map-chart/map-point-series/
+var pointSeries = chart.series.push(am5map.ClusteredPointSeries.new(root, {}));
+chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
+
+
+// Set clustered bullet
+// https://www.amcharts.com/docs/v5/charts/map-chart/clustered-point-series/#Group_bullet
+pointSeries.set("clusteredBullet", function(root) {
+  var container = am5.Container.new(root, {
+    cursorOverStyle:"pointer"
+  });
+
+  var circle1 = container.children.push(am5.Circle.new(root, {
+    radius: 8,
+    tooltipY: 0,
+    fill: am5.color(0xff8c00)
+  }));
+
+  var circle2 = container.children.push(am5.Circle.new(root, {
+    radius: 12,
+    fillOpacity: 0.3,
+    tooltipY: 0,
+    fill: am5.color(0xff8c00)
+  }));
+
+  var circle3 = container.children.push(am5.Circle.new(root, {
+    radius: 16,
+    fillOpacity: 0.3,
+    tooltipY: 0,
+    fill: am5.color(0xff8c00)
+  }));
+
+  var label = container.children.push(am5.Label.new(root, {
+    centerX: am5.p50,
+    centerY: am5.p50,
+    fill: am5.color(0xffffff),
+    populateText: true,
+    fontSize: "8",
+    text: "{value}"
+  }));
+
+  container.events.on("click", function(e) {
+    pointSeries.zoomToCluster(e.target.dataItem);
+    console.log("Initial zoom level:", chart.zoomLevel);
+
+  });
+
+  return am5.Bullet.new(root, {
+    sprite: container
+  });
+});
+
+// Create regular bullets
+pointSeries.bullets.push(function() {
+  var circle = am5.Circle.new(root, {
+    radius: 6,
+    tooltipY: 0,
+    fill: am5.color(0xff8c00),
+    tooltipText: "{title}, link: {link}"
+  });
+
+  return am5.Bullet.new(root, {
+    sprite: circle
+  });
+});
+
+
+// Set data
+var cities = [
+  { title: "TRX", latitude: 3.1412, longitude: 101.7181, link:"google.com" },
+  { title: "KWSP Shah Alam", latitude: 3.0721, longitude: 101.5258, link:"google.com" },
+  { title: "Pasar Siti Khadijah", latitude: 6.1301, longitude: 102.2391, link:"google.com" },
+  { title: "Kuching, Sarawak", latitude: 1.531, longitude: 110.3442, link:"google.com" }
+
+
+
+
+];
+
+for (var i = 0; i < cities.length; i++) {
+  var city = cities[i];
+  addCity(city.longitude, city.latitude, city.title, city.link);
+}
+
+function addCity(longitude, latitude, title, link) {
+  pointSeries.data.push({
+    geometry: { type: "Point", coordinates: [longitude, latitude] },
+    title: title,
+    link: link
+  });
+}
+// Make stuff animate on load
+chart.appear(1000, 100);
+chart.events.on("ready", function () {
+  console.log("Initial zoom level:", chart.zoomLevel);
+  chart.goHome(); // Add this line to recenter and zoom to the home position
+});
+
+
+// polygonSeries.events.on("datavalidated", function() {
+//   chart.goHome();
+// });
+}); // end am5.ready()
+
+
+</script>
+
+    <!-- HTML -->
+    <!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body default-height">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Map</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">jqvmap</a></li>
+            </ol>
+        </div>
+        <!-- row -->
+    <div id="row">
+        <!-- <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">World Map</h4>
+                </div>
+                <div class="card-body">
+                    <div id="world-map"></div>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Malaysia</h4>
+            </div>
+            <div class="card-body">
+                <div id="malaysia-map"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
