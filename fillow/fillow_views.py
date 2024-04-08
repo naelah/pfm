@@ -423,6 +423,13 @@ def widget_basic(request):
     }
     return render(request,'fillow/widget-basic.html',context)
 
+def transactions(request):
+    context={
+        "page_title":"Transactions"
+    }
+    return render(request,'fillow/transactions.html',context)
+
+
 def form_element(request):
     context={
         "page_title":"Form Element"

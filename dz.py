@@ -159,6 +159,10 @@ dz_array = {
                             f"{folder_name}/vendor/datatables/css/jquery.dataTables.min.css",
                             f"{folder_name}/vendor/datatables/responsive/responsive.css",
                         ],
+                        "transactions": [
+                            f"{folder_name}/vendor/datatables/css/jquery.dataTables.min.css",
+                            f"{folder_name}/vendor/datatables/responsive/responsive.css",
+                        ],
                         "uc_lightgallery": [
                             f"{folder_name}/vendor/lightgallery/dist/css/lightgallery.css",
                             f"{folder_name}/vendor/lightgallery/dist/css/lg-thumbnail.css",
@@ -415,6 +419,12 @@ dz_array = {
                         "table_bootstrap_basic": [
                         ],
                         "table_datatable_basic": [
+                            f"{folder_name}/vendor/apexchart/apexchart.js",
+                            f"{folder_name}/vendor/datatables/js/jquery.dataTables.min.js",
+                            f"{folder_name}/vendor/datatables/responsive/responsive.js",
+                            f"{folder_name}/js/plugins-init/datatables.init.js",
+                        ],
+                        "transactions":[
                             f"{folder_name}/vendor/apexchart/apexchart.js",
                             f"{folder_name}/vendor/datatables/js/jquery.dataTables.min.js",
                             f"{folder_name}/vendor/datatables/responsive/responsive.js",

@@ -69,6 +69,8 @@ urlpatterns = [
     path('uc-lightgallery/',fillow_views.uc_lightgallery,name="uc-lightgallery"),
 
     path('widget-basic/',fillow_views.widget_basic,name="widget-basic"),
+    path('transactions/',fillow_views.transactions,name="transactions"),
+
 
     path('form-element/',fillow_views.form_element,name="form-element"),
     path('form-wizard/',fillow_views.form_wizard,name="form-wizard"),
