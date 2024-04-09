@@ -1,5 +1,5 @@
-python3.9 -m pip install whitenoise
-python3.9 -m venv venv
+python -m pip install whitenoise
+python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python3.9 manage.py collectstatic
+python manage.py collectstatic
